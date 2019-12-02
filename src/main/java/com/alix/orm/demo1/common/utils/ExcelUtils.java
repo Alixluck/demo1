@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.math.BigDecimal;
 
 /**
  * @author 杨安星(Alix)
@@ -42,7 +43,7 @@ public class ExcelUtils {
                         StringBuilder sqlbuff = new StringBuilder("INSERT INTO t_rate_extend (risk_code, rule, fee, rule_value) VALUES (");
                         sqlbuff.append("'I195000002',");
                         sqlbuff.append("'age/sex/paymentCode/termCode/d10079/d10080/d10083/d10084/d10085',");
-                        sqlbuff.append("'" + row.getCell(j) + "'");
+                        sqlbuff.append("'").append(double2String(Double.parseDouble(row.getCell(j).toString()))).append("'");
                         sqlbuff.append(",'");
                         sqlbuff.append(row.getCell(0) + "/");
                         if ("男".equals(sexLine.getCell(j).toString().trim())) {
@@ -134,85 +135,94 @@ public class ExcelUtils {
         }
     }
 
-    /**
-     * excel to sql 附加险
-     */
-    private static void excelTosql1() throws IOException {
-        try {
-            File xlsFile = new File("C:\\Users\\PC\\Desktop\\pdf\\费率表.xlsx");
-            // 获得工作簿
-            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(xlsFile));
-            int sheetNum = workbook.getNumberOfSheets();
-            // 获得工作表
-            XSSFSheet sheet = workbook.getSheetAt(22);
-            File file = new File("split/" + sheet.getSheetName() + ".sql");
-            if (file.exists()) {
-                file.delete();
-            }
-            Writer writer = null;
-            writer = new FileWriter(file, true);
-            int rows = sheet.getPhysicalNumberOfRows();
-            int lines = 0;
-            for (int j = 1; j < 11; j++) {
-                for (int t = 2; t < rows; t++) {
-                    Row row = sheet.getRow(t);
-                    Row payLine = sheet.getRow(0);
-                    Row sexLine = sheet.getRow(1);
-                    if (!StringUtils.isEmpty(row.getCell(j).toString())) {
-                        StringBuilder sqlbuff = new StringBuilder("INSERT INTO t_rate_extend (risk_code, rule, fee, rule_value) VALUES (");
-                        sqlbuff.append("'I195000003',");
-                        sqlbuff.append("'age/sex/paymentCode',");
-                        sqlbuff.append("'" + row.getCell(j) + "'");
-                        sqlbuff.append(",'");
-                        sqlbuff.append(row.getCell(0).toString().replace("周岁","").trim() + "/");
-                        if ("男".equals(sexLine.getCell(j).toString().trim())) {
-                            sqlbuff.append("M/");
-                        } else if ("女".equals(sexLine.getCell(j).toString().trim())) {
-                            sqlbuff.append("F/");
-                        }
-                        if ("4 年交".equals(payLine.getCell(j).toString().trim())) {
-                            sqlbuff.append("year_5/");
-                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "4 年交".equals(payLine.getCell(j - 1).toString().trim())) {
-                            sqlbuff.append("year_5/");
-                        } else if ("9 年交".equals(payLine.getCell(j).toString().trim())) {
-                            sqlbuff.append("year_10/");
-                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "9 年交".equals(payLine.getCell(j - 1).toString().trim())) {
-                            sqlbuff.append("year_10/");
-                        } else if ("14 年交".equals(payLine.getCell(j).toString().trim())) {
-                            sqlbuff.append("year_15/");
-                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "14 年交".equals(payLine.getCell(j - 1).toString().trim())) {
-                            sqlbuff.append("year_15/");
-                        } else if ("19 年交".equals(payLine.getCell(j).toString().trim())) {
-                            sqlbuff.append("year_20/");
-                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "19 年交".equals(payLine.getCell(j - 1).toString().trim())) {
-                            sqlbuff.append("year_20/");
-                        } else if ("29 年交".equals(payLine.getCell(j).toString().trim())) {
-                            sqlbuff.append("year_30/");
-                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "29 年交".equals(payLine.getCell(j - 1).toString().trim())) {
-                            sqlbuff.append("year_30/");
-                        }
-                        sqlbuff.append("');");
-                        System.out.println(sqlbuff.toString());
-                        sqlbuff.append("\n");
-                        writer.write(sqlbuff.toString());
-                        lines++;
-                    }
-                }
-            }
-            writer.close();
-            log.info("执行结束" + lines);
-        }catch (Exception e){
-            log.error("管你是什么错误跑出来"+e.getMessage());
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     * excel to sql 附加险
+//     */
+//    private static void excelToSql1() throws IOException {
+//        try {
+//            File xlsFile = new File("C:\\Users\\PC\\Desktop\\pdf\\费率表.xlsx");
+//            // 获得工作簿
+//            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(xlsFile));
+//            int sheetNum = workbook.getNumberOfSheets();
+//            // 获得工作表
+//            XSSFSheet sheet = workbook.getSheetAt(22);
+//            File file = new File("split/" + sheet.getSheetName() + ".sql");
+//            if (file.exists()) {
+//                file.delete();
+//            }
+//            Writer writer = null;
+//            writer = new FileWriter(file, true);
+//            int rows = sheet.getPhysicalNumberOfRows();
+//            int lines = 0;
+//            for (int j = 1; j < 11; j++) {
+//                for (int t = 2; t < rows; t++) {
+//                    Row row = sheet.getRow(t);
+//                    Row payLine = sheet.getRow(0);
+//                    Row sexLine = sheet.getRow(1);
+//                    if (!StringUtils.isEmpty(row.getCell(j).toString())) {
+//                        StringBuilder sqlbuff = new StringBuilder("INSERT INTO t_rate_extend (risk_code, rule, fee, rule_value) VALUES (");
+//                        sqlbuff.append("'I195000003',");
+//                        sqlbuff.append("'age/sex/paymentCode',");
+//                        sqlbuff.append("'" + double2String(Double.valueOf(row.getCell(j).toString())).toString()+ "'");
+//                        sqlbuff.append(",'");
+//                        sqlbuff.append(row.getCell(0).toString().replace("周岁","").trim() + "/");
+//                        if ("男".equals(sexLine.getCell(j).toString().trim())) {
+//                            sqlbuff.append("M/");
+//                        } else if ("女".equals(sexLine.getCell(j).toString().trim())) {
+//                            sqlbuff.append("F/");
+//                        }
+//                        if ("4 年交".equals(payLine.getCell(j).toString().trim())) {
+//                            sqlbuff.append("year_5");
+//                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "4 年交".equals(payLine.getCell(j - 1).toString().trim())) {
+//                            sqlbuff.append("year_5");
+//                        } else if ("9 年交".equals(payLine.getCell(j).toString().trim())) {
+//                            sqlbuff.append("year_10");
+//                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "9 年交".equals(payLine.getCell(j - 1).toString().trim())) {
+//                            sqlbuff.append("year_10");
+//                        } else if ("14 年交".equals(payLine.getCell(j).toString().trim())) {
+//                            sqlbuff.append("year_15");
+//                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "14 年交".equals(payLine.getCell(j - 1).toString().trim())) {
+//                            sqlbuff.append("year_15");
+//                        } else if ("19 年交".equals(payLine.getCell(j).toString().trim())) {
+//                            sqlbuff.append("year_20");
+//                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "19 年交".equals(payLine.getCell(j - 1).toString().trim())) {
+//                            sqlbuff.append("year_20");
+//                        } else if ("29 年交".equals(payLine.getCell(j).toString().trim())) {
+//                            sqlbuff.append("year_30");
+//                        } else if (StringUtils.isEmpty(payLine.getCell(j).toString().trim()) && "29 年交".equals(payLine.getCell(j - 1).toString().trim())) {
+//                            sqlbuff.append("year_30");
+//                        }
+//                        sqlbuff.append("');");
+//                        System.out.println(sqlbuff.toString());
+//                        sqlbuff.append("\n");
+//                        writer.write(sqlbuff.toString());
+//                        lines++;
+//                    }
+//                }
+//            }
+//            writer.close();
+//            log.info("执行结束" + lines);
+//        }catch (Exception e){
+//            log.error("管你是什么错误跑出来"+e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
 
     public static void main(String[] args) {
         try {
-            ExcelUtils.excelTosql1();
+            ExcelUtils.excelToSql();
         } catch (Exception e) {
             log.error("excel del fail");
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     * double 乘以100转成字符串格式
+     * */
+    private static String double2String(double d){
+        BigDecimal bg = new BigDecimal(d * 100);
+        double doubleValue = bg.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        return  String.valueOf((int)doubleValue);
     }
 }
