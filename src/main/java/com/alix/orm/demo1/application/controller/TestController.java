@@ -1,5 +1,6 @@
 package com.alix.orm.demo1.application.controller;
 
+import com.alix.orm.demo1.application.rocketmq.RocketMQProvider;
 import com.alix.orm.demo1.common.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +16,21 @@ public class TestController {
     @Autowired
     private  RedisUtil redisUtil;
 
+    @Autowired
+    RocketMQProvider rocketMQProvider;
+
     @RequestMapping("/test")
     public String test(){
         redisUtil.set("key1","yanganxing111");
         return (String) redisUtil.get("key1");
     }
+
+
+    @RequestMapping("/testMQ")
+    public String testMq() {
+        rocketMQProvider.defaultMQProducer();
+        return null;
+    }
+
+
 }

@@ -143,27 +143,18 @@ public final class RedisUtil {
     }
         // ================================Map=================================
         /**
-         157
          * HashGet
-         158
          * @param key 键 不能为null
-        159
          * @param item 项 不能为null
-        160
          * @return 值
-        161
          */
     public Object hget(String key, String item) {
         return redisTemplate.opsForHash().get(key, item);
     }
         /**
-         167
          * 获取hashKey对应的所有键值
-         168
          * @param key 键
-        169
          * @return 对应的多个键值
-        170
          */
     public Map<Object, Object> hmget(String key) {
         return redisTemplate.opsForHash().entries(key);
