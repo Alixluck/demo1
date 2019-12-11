@@ -105,21 +105,21 @@ public class ExcelUtils {
                         } else if ("Sheet14".equals(sheet.getSheetName())) {
                             sqlbuff.append("full/1/1/1/0/0");
                         } else if ("Sheet15".equals(sheet.getSheetName())) {
-                            sqlbuff.append("full/0/0/1/0/0");
+                            sqlbuff.append("full/0/0/1/0/0"); //00010
                         } else if ("Sheet16".equals(sheet.getSheetName())) {
-                            sqlbuff.append("to_70/0/0/1/0/0");
+                            sqlbuff.append("to_70/0/0/1/0/0");//00010
                         } else if ("Sheet17".equals(sheet.getSheetName())) {
-                            sqlbuff.append("to_60/0/0/1/0/0");
+                            sqlbuff.append("to_60/0/0/1/0/0");//00010
                         } else if ("Sheet18".equals(sheet.getSheetName())) {
-                            sqlbuff.append("full/1/0/1/0/0");
+                            sqlbuff.append("full/1/0/1/0/0");//10010
                         } else if ("Sheet19".equals(sheet.getSheetName())) {
-                            sqlbuff.append("to_70/1/0/1/0/0");
+                            sqlbuff.append("to_70/1/0/1/0/0");//10010
                         } else if ("Sheet20".equals(sheet.getSheetName())) {
-                            sqlbuff.append("to_60/1/0/1/0/0");
+                            sqlbuff.append("to_60/1/0/1/0/0");//10010
                         } else if ("Sheet21".equals(sheet.getSheetName())) {
-                            sqlbuff.append("full/1/0/0/0/1");
+                            sqlbuff.append("full/1/0/0/0/1");//00110
                         } else if ("Sheet22".equals(sheet.getSheetName())) {
-                            sqlbuff.append("full/1/0/0/1/1");
+                            sqlbuff.append("full/1/0/0/1/1");//10110
                         }
                         sqlbuff.append("'");
                         sqlbuff.append(");");
