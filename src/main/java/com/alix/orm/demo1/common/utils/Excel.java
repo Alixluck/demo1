@@ -31,8 +31,6 @@ public class Excel {
             cell.setCellValue(sheet1.getRow(0).getCell(i).getStringCellValue());
         }
 
-
-
 //        for(int i=1;i<rowNumber;i++){
 //            sheet2.createRow(i);
 //            for(int t=0;t<4;t++){
